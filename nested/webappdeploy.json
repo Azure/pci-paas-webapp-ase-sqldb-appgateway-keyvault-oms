@@ -61,7 +61,7 @@
     "defaultSqlServerName": "[concat('sqlserver-', uniqueString(resourceGroup().id))]",
     "defaultSqlDatabaseName": "ContosoPayments",
     "defaultAppServicePlanName": "[concat('contosoplan', uniqueString(resourceGroup().id))]",
-    "defaultAppServicePlanSku": "Basic",
+    "defaultAppServicePlanSku": "Premium",
     "defaultAppServicePlanWorkerSize": "0"
   },
   "resources": [
