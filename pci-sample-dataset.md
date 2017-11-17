@@ -33,7 +33,7 @@ You can copy the script from the deployment file and run it in a new SQL query.
 ## Enabling Logging and Monitoring 
 
 The following sections address security controls that are required to enable
-extensive logging, monitoring, security detection, and anti-malware protection. The following was done using the '2-EnableOMSLoggingOnResources.ps1' script.
+extensive logging, monitoring, security detection, and anti-malware protection. 
 
 ### Operations Management Suite (OMS) configuration
 

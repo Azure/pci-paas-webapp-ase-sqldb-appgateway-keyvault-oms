@@ -1,7 +1,7 @@
 <#
 This script deploys and configures Azure resources as a part of a -pre-deployment- activity
 
-This script should run before you start deployment of Blueprint solution templates. Use your Azure AD Global Administrator account with
+This script should run before you start deployment of PCI-PaaS solution templates. Use your Azure AD Global Administrator account with
         Owner permission at Subscription level to execute this script. 
 		If you are not sure about your permissions, run 0-Setup-AdministrativeAccountAndPermission.ps1 before you execute this script.
 
@@ -113,7 +113,7 @@ Begin
         # Preference variable
         $ProgressPreference = 'SilentlyContinue'
         $ErrorActionPreference = 'Stop'
-        Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy UnRestricted -Force
+        Set-Executionpolicy -Scope CurrentUser -ExecutionPolicy UnRestricted -Force
         
         #Change Path to Script directory
         Set-location $PSScriptRoot
@@ -248,7 +248,7 @@ Process
                 "Microsoft.Compute",
                 "Microsoft.KeyVault",
                 "Microsoft.Network",
-                "Microsoft.web"
+                "Microsoft.Web"
             )
             if($resourceProviders.length) {
                 Write-Host -ForegroundColor Yellow "`t* Registering resource providers"
@@ -479,13 +479,30 @@ Process
             Write-Host -ForegroundColor Yellow "`t* Submitting deployment"
             Start-Process Powershell -ArgumentList "-NoExit", ".\1-click-deployment-nested\Initiate-TemplateDeployment.ps1 -subscriptionID $subscriptionID -globalAdminUserName $globalAdminUserName -globalAdminPassword $globalAdminPassword -deploymentName $deploymentName -resourceGroupName $resourceGroupName -location $location -templateFile '$scriptFolder\azuredeploy.json' -_artifactsLocation $_artifactsLocation -_artifactsLocationSasToken $_artifactsLocationSasToken -sslORnon_ssl $sslORnon_ssl -certData $certData -certPassword $certPassword -aseCertData $aseCertData -asePfxBlobString $asePfxBlobString -asePfxPassword $asePfxPassword -aseCertThumbprint $aseCertThumbprint -bastionHostAdministratorPassword $newPassword -sqlAdministratorLoginPassword $newPassword -sqlThreatDetectionAlertEmailAddress $SqlTDAlertEmailAddress -automationAccountName $automationaccname -customHostName $customHostName -azureAdApplicationClientId $azureAdApplicationClientId -azureAdApplicationClientSecret $newPassword -azureAdApplicationObjectId $azureAdApplicationObjectId -sqlAdAdminUserName $sqlAdAdminUserName -sqlAdAdminUserPassword $newPassword"
             Write-Host "`t`t-> Waiting for deployment $deploymentName to submit.. " -ForegroundColor Yellow
+            $count=0
+            $status=1
             do
             {
+                if($count -lt 2){                
                 Write-Host "`t`t-> Checking deployment in 60 secs.." -ForegroundColor Yellow
                 Start-sleep -seconds 60
+                $count +=1
+                }
+                else{
+                    $status=0
+                    Break
+                    
+                }
             }
             until ((Get-AzureRmResourceGroupDeployment -ResourceGroupName $resourceGroupName -Name $deploymentName -ErrorAction SilentlyContinue) -ne $null)             
-            Write-Host -ForegroundColor Yellow "`t* Deployment has been submitted successfully."
+            if($status){
+                Write-Host -ForegroundColor Yellow "`t* Deployment has been submitted successfully."
+            }            
+            else{
+                throw "Deployment fail to submit. Please redeploy the solution."
+            
+            }
+            
         }
         catch {
             throw $_

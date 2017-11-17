@@ -18,7 +18,7 @@ This and all powershell scripts in the enviroment will run in an ['Unrestricted'
 ```
 ### Deployment Timeline
 
-The estimated time to deploy the solution components is shown in the diagram below. The total time required is approximately 1.5 hours from when the script starts.
+The estimated time to deploy the solution components is shown in the diagram below. The total time required is approximately 1.0 hours from when the script starts.
 
 ![](images/arm-template-deployment-timeline.png)
  

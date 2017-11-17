@@ -21,8 +21,6 @@
 ### Why do I need an SSL certificate?
 > The installation requires a custom domain and SSL certificate to meet PCI DSS requirements and protect the client-side traffic from snooping. Microsoft recommends that a custom domain be purchased with [an SSL package](https://d.docs.live.net/7b2b5032e10686e1/Azure%20Compliance/PCI%20DSS%20quickstart/1.%09https:/docs.microsoft.com/en-us/azure/app-service-web/web-sites-purchase-ssl-web-site). Microsoft offers the ability to create a domain and request an SSL certificate from a Microsoft partner.
 
-### Why does the application gateway backend health status show as `unhealthy`?
-> This deployment assumes that the VIP address [ASE ILB >> Properties >> Virtual IP Address] assigned to ASE ILB is 10.0.3.8 (observed behavior). However, it might be changed to 10.0.3.9. If the application gateway backend health is listed as `unhealthy`, verify that the ASE ILB VIP address and application backend pool targets are the same. Update the application gateway backend pool targets with the ASE ILB VIP. (https://docs.microsoft.com/en-us/azure/application-gateway/application-gateway-create-gateway-portal#add-servers-to-backend-pools)
 
 ### How do I set up the administrator properly to use this solution?
 > Review the 'Configure your global admin for the solution' section of the installation guide.

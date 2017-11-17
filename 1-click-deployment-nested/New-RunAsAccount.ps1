@@ -33,7 +33,7 @@
  [int] $SelfSignedCertNoOfMonthsUntilExpired = 12
  )
 
- Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy UnRestricted -Force
+ Set-Executionpolicy -Scope CurrentUser -ExecutionPolicy UnRestricted -Force
 
  function CreateSelfSignedCertificate([string] $keyVaultName, [string] $certificateName, [string] $selfSignedCertPlainPassword,
                                [string] $certPath, [string] $certPathCer, [string] $selfSignedCertNoOfMonthsUntilExpired ) {
@@ -68,7 +68,7 @@
  While ($NewRole -eq $null -and $Retries -le 6)
  {
     Sleep -s 10
-    New-AzureRMRoleAssignment -RoleDefinitionName Contributor -ServicePrincipalName $Application.ApplicationId | Write-Verbose -ErrorAction SilentlyContinue
+    New-AzureRMRoleAssignment -RoleDefinitionName Contributor -ServicePrincipalName $Application.ApplicationId -ErrorAction SilentlyContinue
     $NewRole = Get-AzureRMRoleAssignment -ServicePrincipalName $Application.ApplicationId -ErrorAction SilentlyContinue
     $Retries++;
  }
@@ -110,7 +110,7 @@
  CreateAutomationCertificateAsset $ResourceGroup $AutomationAccountName $CertifcateAssetName $PfxCertPathForRunAsAccount $PfxCertPlainPasswordForRunAsAccount $true
 
  # Populate the ConnectionFieldValues
- $SubscriptionInfo = Get-AzureRmSubscription -SubscriptionId $SubscriptionId
+ $SubscriptionInfo = Get-AzureRmSubscription -SubscriptionId $SubscriptionId -WarningAction SilentlyContinue
  $TenantID = $SubscriptionInfo | Select TenantId -First 1
  $Thumbprint = $PfxCert.Thumbprint
  $ConnectionFieldValues = @{"ApplicationId" = $ApplicationId; "TenantId" = $TenantID.TenantId; "CertificateThumbprint" = $Thumbprint; "SubscriptionId" = $SubscriptionId}
