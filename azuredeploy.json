@@ -214,6 +214,20 @@
   },
   "resources": [
     {
+        "apiVersion": "2017-05-10",
+        "name": "2e0a6877-dabb-4a87-958b-b85566bb580a",
+        "comments": "GUID for tracking deployments intended for production use.",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+            "mode": "Incremental",
+            "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                        "contentVersion": "1.0.0.0",
+                        "resources": []
+                }
+            }
+    },
+    {
       "name": "deploy-CommonInfrastructure",
       "type": "Microsoft.Resources/deployments",
       "apiVersion": "2016-02-01",
