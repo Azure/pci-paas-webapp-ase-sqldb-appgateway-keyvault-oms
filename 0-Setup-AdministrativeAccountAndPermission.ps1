@@ -36,7 +36,7 @@ Param(
             (Get-Variable tenantId) -and
             (Get-Variable subscriptionId)
         ){$true}
-        Else {Throw "Please make sure you have provided azureADDomainName, tenantId, subscriptionId before using configureGlobalAdmin switch"}
+        Else {Write-Host -ForegroundColor Magenta "`t-> Please make sure you have provided azureADDomainName, tenantId, subscriptionId before using configureGlobalAdmin switch"}
     })] 
     [switch]$configureGlobalAdmin,
 
@@ -84,20 +84,20 @@ Begin{
                 try {
                     $modules = $moduleNames.Keys
                     foreach ($module in $modules){
-                        Write-Host "Verifying module $module." -ForegroundColor Yellow
+                        Write-Host "`t* Verifying module $module." -ForegroundColor Yellow
                         if (!(Get-InstalledModule $module -ErrorAction SilentlyContinue)){
-                            Write-Host "Module $module does not exist. Attempting to install the module." -ForegroundColor Yellow
+                            Write-Host "`t* Module $module does not exist. Attempting to install the module." -ForegroundColor Yellow
                             Install-Module $module -RequiredVersion $moduleNames[$module] -Force -AllowClobber
-                            Write-Host "Module $module installed successfully." -ForegroundColor Yellow
+                            Write-Host "`t* Module $module installed successfully." -ForegroundColor Cyan
                         }
                         elseif((Get-InstalledModule $module).Version.ToString() -ne $moduleNames[$module]){
-                            Write-Host "Other version of Module found. Installing required version of module." -ForegroundColor Yellow
+                            Write-Host "`t* Other version of Module found. Installing required version of module." -ForegroundColor Yellow
                             if (Install-Module $module -RequiredVersion $moduleNames[$module] -Force -AllowClobber){
-                                Write-Host "Module $module installed successfully." -ForegroundColor Yellow
+                                Write-Host "`t* Module $module installed successfully." -ForegroundColor Cyan
                             }
                         }
                         else {
-                            Write-Host "Module $module with required version is already installed." -ForegroundColor Yellow
+                            Write-Host "`t* Module $module with required version is already installed." -ForegroundColor Yellow
                         }
                     }
                 }
@@ -123,7 +123,7 @@ Begin{
 Process
 {
     # Importing / Installing Powershell Modules
-    Write-Host -ForegroundColor Green "`nStep 1: Importing / Installing Powershell Modules"
+    Write-Host -ForegroundColor Green "`n Step 1: Importing / Installing Powershell Modules"
     try{
           ### Install required powershell modules
             $requiredModules=@{
@@ -134,7 +134,7 @@ Process
                 'AzureDiagnosticsAndLogAnalytics' = '0.1'
             }
         if ($installModules) {
-            Write-Host "Trying to install listed modules.." -ForegroundColor Yellow
+            Write-Host "`t* Trying to install listed modules..." -ForegroundColor Yellow
             $requiredModules
             $modules = $requiredModules.Keys
             # Completely uninstalling old versions to avoid module import conflicts. 
@@ -142,26 +142,26 @@ Process
                 Uninstall-Module -Name $module -ErrorAction SilentlyContinue -force
             }
             Install-RequiredModules -moduleNames $requiredModules
-            Write-Host "All the required modules are now installed. You can now re-run the script without 'installModules' switch." -ForegroundColor Yellow
+            Write-Host "`t* All the required modules are now installed. You can now re-run the script without 'installModules' switch." -ForegroundColor Yellow
         }
 
         <# This script takes a SubscriptionID, ResourceType, ResourceGroup and a workspace ID as parameters, analyzes the subscription or
         specific ResourceGroup defined for the resources specified in $Resources, and enables those resources for diagnostic metrics
         also enabling the workspace ID for the OMS workspace to receive these metrics.#>        
-        Write-Host -ForegroundColor Yellow "Checking if Enable-AzureRMDiagnostics script is installed."
+        Write-Host -ForegroundColor Yellow "`t* Checking if Enable-AzureRMDiagnostics script is installed."
         If (Get-InstalledScript -Name Enable-AzureRMDiagnostics -ErrorAction SilentlyContinue) 
         {   
-            Write-Host -ForegroundColor Yellow "Enable-AzureRMDiagnostics script is already installed."
+            Write-Host -ForegroundColor Yellow "`t* Enable-AzureRMDiagnostics script is already installed."
         }else {
             if ($installModules) {
                 Install-Script -Name Enable-AzureRMDiagnostics -Force
                 Start-Sleep -Seconds 10
                 if(Get-InstalledScript -Name Enable-AzureRMDiagnostics ){
-                    Write-Host -ForegroundColor Yellow "Script installed successfully"
+                    Write-Host -ForegroundColor Cyan "`t* Script installed successfully"
                 }
             }else {
-                Write-Host -ForegroundColor Red "Enable-AzureRMDiagnostics script does not exist. "
-                Write-Host -ForegroundColor Red "Please run script with -installModules switch to install modules."
+                Write-Host -ForegroundColor Magenta "`t-> Enable-AzureRMDiagnostics script does not exist. "
+                Write-Host -ForegroundColor Magenta "`t-> Please run script with -installModules switch to install modules."
             }            
         }
 
@@ -173,17 +173,17 @@ Process
         
         #Following script Imports the Required Module into powershell.
         Start-Sleep 5
-    	Write-Host "Trying to import listed modules.." -ForegroundColor Cyan
+    	Write-Host "`t* Trying to import listed modules..." -ForegroundColor Cyan
         foreach ($module in $modules){
-            Write-Host "Importing module - $module with required version $($requiredModules[$module])." -ForegroundColor Yellow 
+            Write-Host "`t* Importing module - $module with required version $($requiredModules[$module])." -ForegroundColor Yellow 
             Import-Module -Name $module -RequiredVersion $requiredModules[$module]
             if (Get-Module -Name $module) {
-                Write-Host "Module - $module imported successfully." -ForegroundColor Yellow
+                Write-Host "`t* Module - $module imported successfully." -ForegroundColor Cyan
             }
         }        
         If (Get-InstalledScript -Name Enable-AzureRMDiagnostics -ErrorAction SilentlyContinue)
         {
-            Write-Host "All the required modules are now installed and imported successfully." -ForegroundColor Green
+            Write-Host "`t*** All the required modules are now installed and imported successfully. ***" -ForegroundColor Green
         }          
     }
     catch {
@@ -194,7 +194,7 @@ Process
     if ($configureGlobalAdmin)
     {   
         # Creating Global Administrator Account & Making it Company Administrator in Azure Active Directory
-        Write-Host -ForegroundColor Green "`nStep 2: Creating Azure AD Global Admin - $globalADAdminUserName"
+        Write-Host -ForegroundColor Green "`n Step 2: Creating Azure AD Global Admin - $globalADAdminUserName"
         try {
              # Connecting to Azure AD
              Write-Host -ForegroundColor Yellow "`t* Connecting to Azure Active Directory. Enter username and password when prompted." #The -Credential parameter cannot be used with Microsoft Accounts. 
@@ -222,7 +222,7 @@ Process
         }
 
         # Assigning Owner permission to Global Administrator Account on a Subscription
-        Write-Host -ForegroundColor Green "`nStep 3: Configuring subscription - $subscriptionId"        
+        Write-Host -ForegroundColor Green "`n Step 3: Configuring subscription - $subscriptionId"        
         try {
              # Login to Azure Subscription
              Write-Host -ForegroundColor Yellow "`t* Connecting to Azure Subscription - $subscriptionId. Enter username and password when prompted. " #The -Credential parameter cannot be used with Microsoft Accounts. 
@@ -243,7 +243,7 @@ End
 {
     if($configureGlobalAdmin){
         Write-Host -ForegroundColor Green "`n######################################################################`n"
-        Write-Host -ForegroundColor Yellow "Script complete"
+        Write-Host -ForegroundColor Green " Script complete"
         $outputTable.Add('globalADAdminUserName',$globalADAdminUserName)
         $outputTable.Add('globalADAdminPassword',$globalADAdminPassword)
         $outputTable | Sort-Object Name | Format-Table -AutoSize -Wrap -Expand EnumOnly

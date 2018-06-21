@@ -4,7 +4,7 @@
   "parameters": {
     "_artifactsLocation": {
       "type": "string",
-      "defaultValue": "https://raw.githubusercontent.com/AvyanConsultingCorp/pci-paas-webapp-ase-sqldb-appgateway-keyvault-oms/master",
+      "defaultValue": "https://raw.githubusercontent.com/Azure/pci-paas-webapp-ase-sqldb-appgateway-keyvault-oms/master",
       "metadata": {
         "description": "Publicly accessible location of all deployment artifacts."
       }
@@ -101,7 +101,7 @@
     },
     "customHostName": {
       "type": "string",
-      "defaultValue": "azurepcisamples.com",
+      "defaultValue": "azurewebsites.net",
       "metadata": {
         "description": "Provide the Custom Host Name."
       }
@@ -162,7 +162,7 @@
   },
   "variables": {
     "storageAccountDiagnostics": "[concat('stgdiag', uniquestring(resourceGroup().id))]",
-    "webPackageName": "ContosoWebStore.zip",
+    "webPackageName": "WebStore.zip",
     "publicIpAddressName": "publicIp-AppGateway",
     "aseNsgGroupName": "nsg-ASE",
     "wafNsgGroupName": "nsg-WAF-Gateway",
@@ -208,7 +208,7 @@
       "environment": "Pilot",
       "projectname": "PCI PaaS Reference Architecture",
       "dataprofile": "PCI-CCTD (Credit Card Transaction Data)",
-      "department": "IT - Avyan Consulting",
+      "department": "IT",
       "businessUnit": "Cloud - IT COE"
     }
   },

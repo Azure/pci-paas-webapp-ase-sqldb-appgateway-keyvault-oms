@@ -3,12 +3,13 @@
 ## Script Details: `0-Setup-AdministrativeAccountAndPermission.ps1`
 
 This PowerShell script is used to verify pre-deployment requirements for the Payment Card Payment processing solution for PCI DSS enablement.
+This script can also be used for installing and loading the necessary PowerShell modules to successfully deploy the Azure Resource Manager templates. 
  
 # Description 
- This PowerShell script automates the installation and verification of the PowerShell modules, as well as configuring the administrative user of the solution. 
+ This PowerShell script automates the installation and verification of the PowerShell modules for deploying this solution. This script also supports configuring an administrative user in Azure Active Directory for supporting the deployment. 
  > NOTE: This script MUST be run as *Local Administrator* with elevated privileges. For more information, see [Why do I need to run as local administrator?](https://social.technet.microsoft.com/Forums/scriptcenter/en-US/41a4ba3d-93fd-485b-be22-c877afff1bd8/how-to-run-a-powershell-script-in-admin-account?forum=ITCG)  
 
- Running this script is not required, but installation will fail if the following modules have not been properly configured:
+ Running this script is not required, but the deployment will fail if the following modules have not been properly configured and loaded into the PowerShell session:
 - AzureRM
 - AzureAD
 - MSOnline
@@ -30,7 +31,7 @@ This script will attempt to install the following versions of these PowerShell m
 ```
 This command will validate or install any missing PowerShell modules which are required for this foundational architecture.
 
-## Example 2: Configuring your global admin
+## Example 2: Configuring an Azure Active Directory (AAD) global administrator
 
 ```powershell
 .\0-Setup-AdministrativeAccountAndPermission.ps1 
@@ -40,7 +41,8 @@ This command will validate or install any missing PowerShell modules which are r
     -configureGlobalAdmin 
  ```
 
- This command will deploy installed modules, and setup the solution on a **new subscription**. It will create the user `adminXX@contosowebstore.com` with a randomly generated strong password (15 characters minimum, with uppercase and lowercase letters, and at least one number and one special character.) 
+ This command will deploy and load installed modules, and setup the solution on a **new subscription**. It will also create the user `adminXX@contosowebstore.com` with a randomly generated strong password (15 characters minimum, with uppercase and lowercase letters, and at least one number and one special character) for use with the deployment solution. 
+ > NOTE: An active Azure Active Directory (AAD) domain name will be required for supporting this deployment. Before running this solution, verify a valid Azure Active Directory domain is accesible for deploying this solution with.  
  
 ## Example 3: Install required modules and Configure your global admin.
 
@@ -52,7 +54,7 @@ This command will validate or install any missing PowerShell modules which are r
     -configureGlobalAdmin 
     -installModules
  ``` 
-This command will validate or install any missing PowerShell modules which are required for this foundational architecture. It will create the user `adminXX@contosowebstore.com` with a randomly generated strong password (15 characters minimum, with uppercase and lowercase letters, and at least one number and one special character.) 
+This command will validate or install any missing PowerShell modules which are required for this foundational architecture. It will create the user `adminXX@contosowebstore.com` with a randomly generated strong password (15 characters minimum, with uppercase and lowercase letters, and at least one number and one special character). 
  
 # Required parameters
 
@@ -70,7 +72,7 @@ Specifies the ID of a subscription. If you do not specify this parameter, the ac
 
 > -configureGlobalAdmin
 
-Attempt to create an administrator user configured as a subscription administrator. An Active Directory Administrator with global privileges is required to run the installation. The local administrator must be in the `contosowebstore.com` domain namespace to run this solution. This step helps create the correct administrator user.
+Attempt to create an administrator user, configured as a subscription administrator. An Azure Active Directory Administrator with global privileges is required to run the installation. The local administrator must be in the domain namespace, specified by `-azureADDomainName`, to run this solution. This step helps create the correct administrator user.
 
 > -installModules
 
@@ -81,29 +83,28 @@ Installs and verifies all required modules. If any of the commands from the scri
 The following debugging and troubleshooting steps can help identify common issues.
 
 To test your username and passwords with [Azure RM](https://docs.microsoft.com/en-us/powershell/azureps-cmdlets-docs/), run the following commands in PowerShell:
-```powershell
-$cred = Get-Credential  
-Login-AzureRmAccount -Credential $cred
+```powershell 
+ Login-AzureRmAccount
 ```
 
 To test [Azure AD](https://technet.microsoft.com/en-us/library/dn975125.aspx), run the following commands in PowerShell:  
-```powershell
-$cred = Get-Credential  
-Login-AzureAD -Credential $cred
+```powershell 
+ Connect-AzureAD
 ```
 
 Review the following documentation to test [Enable AzureRM Diagnostics](https://www.powershellgallery.com/packages/Enable-AzureRMDiagnostics/1.3/DisplayScript).                   
 Review the following documentation to test [Azure Diagnostics and LogAnalytics](https://www.powershellgallery.com/packages/AzureDiagnosticsAndLogAnalytics/0.1).                  
 
 To test [SQL Server PowerShell](https://msdn.microsoft.com/en-us/library/hh231683.aspx?f=255&MSPPError=-2147217396#Installing#SQL#Server#PowerShell#Support), run the following commands in PowerShell:
-```powershell
- $Credential = Get-Credential   Connect-AzureAD -Credential $Credential   Get-Module -ListAvailable -Name Sqlps;
+```powershell  
+ Connect-AzureAD  
+ Get-Module -ListAvailable -Name Sqlps
 ```
-## Troubleshooting your PowerShell Deployment scripts
+## Troubleshooting your PowerShell deployment scripts
 
-Please verify that running the 0-Setup-AdministrativeAccountAndPermission.ps1 results in no error messages. This script configures the open PowerShell session for correctly deploying the ARM templates and performing deployment steps throughout running the 1-DeployAndConfigureAzureResources.ps1 script. 
+Please verify that running the 0-Setup-AdministrativeAccountAndPermission.ps1 results in no error messages. This script configures the open PowerShell session for correctly deploying the ARM templates and for performing deployment steps throughout running the 1-DeployAndConfigureAzureResources.ps1 or 1A-ContosoWebStoreDemoAzureResources.ps1 scripts. 
 
-If module import/installation challenges are experienced when running the 0-Setup-AdministrativeAccountAndPermission.ps1 script, navigate to C:\Program Files\WindowsPowerShell\Modules and remove any directories associated to the following items:
+If module import/installation challenges are experienced when running the 0-Setup-AdministrativeAccountAndPermission.ps1 script, navigate to `C:\Program Files\WindowsPowerShell\Modules` and remove any directories associated to the following items:
 - AzureRM
 - AzureAD
 - MSOnline

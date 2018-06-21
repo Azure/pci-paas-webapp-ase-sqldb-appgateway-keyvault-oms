@@ -16,6 +16,19 @@ All documentation is now avalible on docs.microsoft.com and can be accessed via 
 
 # ACKNOWLEDGMENTS and DISCLAIMER
 
+### First Information Technology Services (FITS)
+
+*June 2018*
+
+*This document is for informational purposes only. MICROSOFT AND FIRST INFORMATION TECHNOLOGY SERVICES (FITS) MAKE NO WARRANTIES, EXPRESS, IMPLIED, OR STATUTORY, AS TO THE INFORMATION IN THIS DOCUMENT. This document is provided “as-is.” Information and views expressed in this document, including URL and other Internet website references, may change without notice. Customers reading this document bear the risk of using it.*
+*This document does not provide customers with any legal rights to any intellectual property in any Microsoft or FITS product or solutions.* 
+*Customers may copy and use this document for their internal, reference purposes.*
+*NOTE: Certain recommendations in this paper may result in increased data, network, or compute resource usage in Azure, and may increase a customer’s Azure license or subscription costs.*
+*The solution in this document is intended as a reference architecture pilot and should not be used as-is for production purposes.  Achieving PCI compliance requires that customers consult with their Qualified Security Assessor.*
+
+*This solution was developed and updated cooperatively by Microsoft and First Information Technology Services.*
+
+### Avyan Consulting
 
 *June 2017*
 
@@ -27,11 +40,11 @@ All documentation is now avalible on docs.microsoft.com and can be accessed via 
 
 *This solution was developed cooperatively by Microsoft and Avyan consulting.*
 
-
 ### Authors of the document 
 
 * *Frank Simorjay (Microsoft)*  
 * *Gururaj Pandurangi (Avyan Consulting)*
+* *Michael Kim (First Information Technology Services)*
 
 
 
