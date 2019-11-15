@@ -137,6 +137,10 @@ If this is updated, the variables set in `azuredeploy.json` under `aseLocation` 
 This variable can be changed to a different location than the default value `eastus2`. Changing this setting requires that the deployment is monitored to ensure its successful completion.
 If this is updated, the variable set in `azuredeploy.json` under `automationRegion` will need to be updated to match the corresponding region set for `$automationAcclocation`. 
 
+If you do change location, ensure you also update the azuredeploy.json variables  
+
+aseLocation,omsRegion,automationRegion
+
 ## Troubleshooting the deployment script
 
 If errors are experience when attempting to run the 1A-ContosoWebStoreDemoAzureResources.ps1 script, verify that the correct version PowerShell modules were imported when running the 0-Setup-AdministrativeAccountAndPermission.ps1 script. 
